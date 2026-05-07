@@ -49,7 +49,7 @@ Acceptance Criteria:
 
 Acceptance Criteria:
 - Workflow runs on push and PR
-- mvn test executes successfully","ci","Backlog"
+- mvn test executes successfully","ci","Done"
 "README","Write usage and architecture overview.
 
 Acceptance Criteria:
@@ -60,7 +60,7 @@ Acceptance Criteria:
 
 Acceptance Criteria:
 - Covers architecture, workflows, tests, CI
-- Under 10 minutes","docs;video","Backlog"
+- Under 10 minutes","docs;video","Done"
 "Unit test suite","Implement JUnit 5 tests for core business rules.
 
 Acceptance Criteria:
