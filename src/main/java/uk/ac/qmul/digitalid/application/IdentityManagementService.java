@@ -8,6 +8,7 @@ import java.util.UUID;
 import uk.ac.qmul.digitalid.domain.DigitalId;
 import uk.ac.qmul.digitalid.domain.OrganizationType;
 import uk.ac.qmul.digitalid.domain.ResidencyStatus;
+import uk.ac.qmul.digitalid.domain.Restriction;
 import uk.ac.qmul.digitalid.domain.Status;
 import uk.ac.qmul.digitalid.persistence.DigitalIdRepository;
 
@@ -112,6 +113,20 @@ public final class IdentityManagementService {
             throw new DomainValidationException("Cannot update residency status on revoked ID");
         }
         digitalId.setResidencyStatus(residencyStatus);
+        repository.save(digitalId);
+    }
+
+    public void addRestriction(
+            OrganizationType actor,
+            UUID id,
+            Restriction restriction
+    ) {
+        authorizationService.requireCentralAuthority(actor);
+        DigitalId digitalId = requireExisting(id);
+        if (digitalId.getCurrentStatus() == Status.REVOKED) {
+            throw new DomainValidationException("Cannot add restriction to revoked ID");
+        }
+        digitalId.addRestriction(restriction);
         repository.save(digitalId);
     }
 
