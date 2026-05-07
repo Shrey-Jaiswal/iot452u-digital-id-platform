@@ -2,6 +2,8 @@
 scripts/github_project_sync.py
 scripts/.env
 *.env
+__pycache__/
+*.pyc
 
 # Local OS/editor files
 .DS_Store
