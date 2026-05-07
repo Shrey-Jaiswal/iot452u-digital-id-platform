@@ -150,6 +150,9 @@ public final class DigitalIdApp {
     }
 
     System.out.println("Audit events recorded: " + auditLog.list().size());
+        auditLog.list().stream().limit(3).forEach(event ->
+                System.out.println("Audit: " + event.getAction() + " by " + event.getActor())
+        );
     }
 
     private static void printVerification(

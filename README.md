@@ -31,3 +31,8 @@ java -cp target/classes uk.ac.qmul.digitalid.cli.DigitalIdApp
 - Driving Licence Authority: active and no driving restriction
 - Immigration Authority: active, residency valid, no immigration hold
 - Tax Authority: active and not suspended during the reporting period
+
+## Design decisions
+- In-memory repository keeps the focus on behaviour and testability rather than persistence.
+- Status history enables deterministic checks for time-bounded rules (e.g., tax suspension periods).
+- Organisation-specific verification rules are isolated to keep policy logic clear and reusable.
