@@ -14,10 +14,20 @@ import uk.ac.qmul.digitalid.persistence.DigitalIdRepository;
 public final class IdentityManagementService {
     private final DigitalIdRepository repository;
     private final AuthorizationService authorizationService;
+    private final StatusTransitionPolicy statusTransitionPolicy;
 
     public IdentityManagementService(DigitalIdRepository repository, AuthorizationService authorizationService) {
+        this(repository, authorizationService, new StatusTransitionPolicy());
+    }
+
+    public IdentityManagementService(
+            DigitalIdRepository repository,
+            AuthorizationService authorizationService,
+            StatusTransitionPolicy statusTransitionPolicy
+    ) {
         this.repository = Objects.requireNonNull(repository, "repository");
         this.authorizationService = Objects.requireNonNull(authorizationService, "authorizationService");
+        this.statusTransitionPolicy = Objects.requireNonNull(statusTransitionPolicy, "statusTransitionPolicy");
     }
 
     public DigitalId createIdentity(
@@ -79,9 +89,14 @@ public final class IdentityManagementService {
     ) {
         authorizationService.requireCentralAuthority(actor);
         DigitalId digitalId = requireExisting(id);
-        if (digitalId.getCurrentStatus() == Status.REVOKED && newStatus != Status.REVOKED) {
+        Status current = digitalId.getCurrentStatus();
+        if (newStatus == current) {
+            return;
+        }
+        if (current == Status.REVOKED && newStatus != Status.REVOKED) {
             throw new DomainValidationException("Cannot change status after revocation");
         }
+        statusTransitionPolicy.validate(current, newStatus);
         digitalId.changeStatus(newStatus, effectiveFrom, reason);
         repository.save(digitalId);
     }
