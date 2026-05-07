@@ -16,19 +16,22 @@ public final class IdentityManagementService {
     private final DigitalIdRepository repository;
     private final AuthorizationService authorizationService;
     private final StatusTransitionPolicy statusTransitionPolicy;
+    private final IdentityAuditLog auditLog;
 
     public IdentityManagementService(DigitalIdRepository repository, AuthorizationService authorizationService) {
-        this(repository, authorizationService, new StatusTransitionPolicy());
+        this(repository, authorizationService, new StatusTransitionPolicy(), new IdentityAuditLog());
     }
 
     public IdentityManagementService(
             DigitalIdRepository repository,
             AuthorizationService authorizationService,
-            StatusTransitionPolicy statusTransitionPolicy
+            StatusTransitionPolicy statusTransitionPolicy,
+            IdentityAuditLog auditLog
     ) {
         this.repository = Objects.requireNonNull(repository, "repository");
         this.authorizationService = Objects.requireNonNull(authorizationService, "authorizationService");
         this.statusTransitionPolicy = Objects.requireNonNull(statusTransitionPolicy, "statusTransitionPolicy");
+        this.auditLog = Objects.requireNonNull(auditLog, "auditLog");
     }
 
     public DigitalId createIdentity(
@@ -61,6 +64,7 @@ public final class IdentityManagementService {
                 reason
         );
         repository.save(digitalId);
+        auditLog.record(new IdentityAuditEvent(digitalId.getId(), actor, AuditActions.CREATE, effectiveFrom));
         return digitalId;
     }
 
@@ -79,6 +83,7 @@ public final class IdentityManagementService {
         }
         digitalId.updateContact(fullName, address, phone, email);
         repository.save(digitalId);
+        auditLog.record(new IdentityAuditEvent(digitalId.getId(), actor, AuditActions.UPDATE_CONTACT, LocalDateTime.now()));
     }
 
     public void changeStatus(
@@ -100,6 +105,7 @@ public final class IdentityManagementService {
         statusTransitionPolicy.validate(current, newStatus);
         digitalId.changeStatus(newStatus, effectiveFrom, reason);
         repository.save(digitalId);
+        auditLog.record(new IdentityAuditEvent(digitalId.getId(), actor, AuditActions.CHANGE_STATUS, effectiveFrom));
     }
 
     public void updateResidencyStatus(
@@ -114,6 +120,7 @@ public final class IdentityManagementService {
         }
         digitalId.setResidencyStatus(residencyStatus);
         repository.save(digitalId);
+        auditLog.record(new IdentityAuditEvent(digitalId.getId(), actor, AuditActions.UPDATE_RESIDENCY, LocalDateTime.now()));
     }
 
     public void addRestriction(
@@ -128,6 +135,7 @@ public final class IdentityManagementService {
         }
         digitalId.addRestriction(restriction);
         repository.save(digitalId);
+        auditLog.record(new IdentityAuditEvent(digitalId.getId(), actor, AuditActions.ADD_RESTRICTION, LocalDateTime.now()));
     }
 
     private DigitalId requireExisting(UUID id) {
