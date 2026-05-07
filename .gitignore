@@ -1,0 +1,19 @@
+# Local tooling
+scripts/github_project_sync.py
+scripts/.env
+*.env
+
+# Local OS/editor files
+.DS_Store
+.idea/
+
+# Virtual environments
+.venv/
+
+# Build outputs
+target/
+
+# Local coursework artifacts
+assignment.txt
+IOT452U 2025-26 Individual Coursework.pdf.pdf
+
