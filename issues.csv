@@ -1,0 +1,68 @@
+title,body,labels,status
+"Project skeleton","Goal: create the Maven project layout and base package structure.
+
+Acceptance Criteria:
+- pom.xml targets Java 17 and JUnit 5
+- src/main/java and src/test/java exist
+- mvn test runs without errors","setup;build","Done"
+"Domain model","Implement DigitalId aggregate, status, history, and restrictions.
+
+Acceptance Criteria:
+- Immutable attributes enforced
+- Status history recorded on transitions
+- Restriction model supports optional periods","domain","Done"
+"Repository layer","Create repository interface and in-memory implementation.
+
+Acceptance Criteria:
+- CRUD operations supported
+- Lookup by id and nationalId
+- Tests cover repository behavior","persistence;domain","Done"
+"Authorization rules","Restrict mutations to CentralAuthority only.
+
+Acceptance Criteria:
+- Unauthorized operations rejected with clear errors
+- Negative cases covered","auth;rules","Done"
+"Identity management","Implement create, update, and status change flows.
+
+Acceptance Criteria:
+- Invalid transitions rejected
+- Updates on revoked IDs rejected
+- Deterministic handling of repeats","application;rules","Done"
+"Verification rules","Implement per-organisation verification rules.
+
+Acceptance Criteria:
+- Tax period suspension check
+- Driving restriction check
+- Immigration hold check
+- Bank/Employer validity-only response","rules","Done"
+"Audit log","Record key actions in an audit log.
+
+Acceptance Criteria:
+- Entries for create, update, status change, verification
+- Actor and timestamp included","audit","Done"
+"CLI demo","Build console runner demonstrating key workflows.
+
+Acceptance Criteria:
+- Runs from main()
+- Clear, structured output","cli","Done"
+"CI pipeline","Add GitHub Actions workflow to build and test.
+
+Acceptance Criteria:
+- Workflow runs on push and PR
+- mvn test executes successfully","ci","Done"
+"README","Write usage and architecture overview.
+
+Acceptance Criteria:
+- Run instructions
+- Architecture summary and packages
+- Repo link included","docs","Done"
+"Video script","Draft concise demo outline and talking points.
+
+Acceptance Criteria:
+- Covers architecture, workflows, tests, CI
+- Under 10 minutes","docs;video","Done"
+"Unit test suite","Implement JUnit 5 tests for core business rules.
+
+Acceptance Criteria:
+- Each org rule has positive and negative test
+- Status history and restriction periods tested","tests","Done"
